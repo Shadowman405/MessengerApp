@@ -8,6 +8,7 @@
 import UIKit
 
 class LoginViewController: UIViewController {
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "logo")
@@ -109,6 +110,9 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func loginButtonTaped() {
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        
         guard let email = emailField.text, let password = passwordField.text, !email.isEmpty,!password.isEmpty, password.count >= 6 else {
             alertUserLoginError()
             return
@@ -132,5 +136,12 @@ class LoginViewController: UIViewController {
 
 
 extension LoginViewController: UITextFieldDelegate {
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailField {
+            passwordField.becomeFirstResponder()
+        } else if textField == passwordField {
+            loginButtonTaped()
+        }
+        return true
+    }
 }
