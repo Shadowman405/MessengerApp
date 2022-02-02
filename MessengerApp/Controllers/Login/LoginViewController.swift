@@ -70,6 +70,10 @@ class LoginViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register", style: .done, target: self, action: #selector(didTapRegister))
         
+        loginButton.addTarget(self, action: #selector(loginButtonTaped), for: .touchUpInside)
+        emailField.delegate = self
+        passwordField.delegate = self
+        
         //Adding subviews
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
@@ -104,11 +108,29 @@ class LoginViewController: UIViewController {
                                  height: 52)
     }
     
+    @objc private func loginButtonTaped() {
+        guard let email = emailField.text, let password = passwordField.text, !email.isEmpty,!password.isEmpty, password.count >= 6 else {
+            alertUserLoginError()
+            return
+        }
+        // Firebase login
+        
+    }
     
+    func alertUserLoginError() {
+        let alert = UIAlertController(title: "Woops", message: "Please enter all information for login", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
     
     @objc private func didTapRegister() {
         let vc = RegisterViewController()
         vc.title = "Create Account"
         navigationController?.pushViewController(vc, animated: true)
     }
+}
+
+
+extension LoginViewController: UITextFieldDelegate {
+    
 }
