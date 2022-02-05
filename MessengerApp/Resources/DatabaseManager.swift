@@ -10,9 +10,7 @@ import FirebaseDatabase
 
 final class DatabaseManager {
     static let shared = DatabaseManager()
-    
     private let database = Database.database().reference()
-    
 }
 
 //MARK: - Account Managment
@@ -51,5 +49,5 @@ struct ChatAppUser {
         safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
         return safeEmail
     }
-//    let profilePicture: String
+//    let profilePicture: String url
 }
