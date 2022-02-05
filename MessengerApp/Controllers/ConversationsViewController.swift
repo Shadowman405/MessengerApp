@@ -14,12 +14,14 @@ class ConversationsViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .red
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         validateAuth()
+        
     }
     
     private func validateAuth() {

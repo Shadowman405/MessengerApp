@@ -180,18 +180,22 @@ class RegisterViewController: UIViewController {
         }
         // Firebase login
         
-        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) {[weak self] authResult, error in
-            guard let strongSelf = self else {return}
-            guard let result = authResult, error == nil else {
-                print("Error, creating user")
+        DatabaseManager.shared.userExists(with: email) { exists in
+            guard !exists else {
+                //user already exists
                 return
             }
-            
-            let user = result.user
-            print("Created user: \(user)")
-            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) {[weak self] authResult, error in
+                guard let strongSelf = self else {return}
+                guard authResult != nil, error == nil else {
+                    print("Error, creating user")
+                    return
+                }
+                
+                DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName, lastName: lastName, emailAdress: email))
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            }
         }
-        
     }
     
     func alertUserLoginError() {
