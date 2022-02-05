@@ -180,13 +180,15 @@ class RegisterViewController: UIViewController {
         }
         // Firebase login
         
-        DatabaseManager.shared.userExists(with: email) { exists in
+        DatabaseManager.shared.userExists(with: email) {[weak self] exists in
+            guard let strongSelf = self else {return}
             guard !exists else {
                 //user already exists
+                strongSelf.alertUserLoginError(message: "User with this email already exists")
                 return
             }
-            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) {[weak self] authResult, error in
-                guard let strongSelf = self else {return}
+            
+            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) {authResult, error in
                 guard authResult != nil, error == nil else {
                     print("Error, creating user")
                     return
@@ -198,8 +200,8 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    func alertUserLoginError() {
-        let alert = UIAlertController(title: "Woops", message: "Please enter all information to create a new account", preferredStyle: .alert)
+    func alertUserLoginError(message: String = "Please enter all infeormation to creatr a new account") {
+        let alert = UIAlertController(title: "Woops", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
     }
