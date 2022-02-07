@@ -68,9 +68,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             print(error.localizedDescription)
             return
         }
+        guard let email = user.profile.email,
+              let firstName = user.profile.givenName,
+              let lastName = user.profile.familyName else {return}
+        
+        DatabaseManager.shared.userExists(with: email) { exists in
+            if !exists {
+                //insert in DB
+                DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName, lastName: lastName, emailAdress: email))
+            }
+        }
         
         guard let authentication = user.authentication else {return}
         let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
+        FirebaseAuth.Auth.auth().signIn(with: credential) { authResult, error in
+            guard authResult != nil , error == nil else {
+                print("Failed to login with Google")
+                return
+            }
+            print("Succesfuly sign in with google credential")
+            NotificationCenter.default.post(name: .didLogInNotification, object: nil)
+        }
         
     }
     
