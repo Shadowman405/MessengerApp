@@ -59,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             annotation: options[UIApplication.OpenURLOptionsKey.annotation]
         )
         
-        //return GIDSignIn.sharedInstance().handle(url)
+       // return GIDSignIn.sharedInstance().handle(url, sourceApplication: [UIApplication.OpenURLOptionsKey.sourceApplication] as? String,annotation: [:])
 
     }
 
@@ -75,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-        
+        print("Google user was disconected")
     }
 
 }

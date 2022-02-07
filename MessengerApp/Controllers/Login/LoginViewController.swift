@@ -10,7 +10,7 @@ import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, GIDSignInUIDelegate {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -72,9 +72,14 @@ class LoginViewController: UIViewController {
         button.permissions = ["public_profile", "email"]
         return button
     }()
-
+    
+    private let googleLogInButton = GIDSignInButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        GIDSignIn.sharedInstance().uiDelegate = self
+        
         title = "Log In"
         view.backgroundColor = .white
         
@@ -94,6 +99,8 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(loginButton)
         //Facebook
         scrollView.addSubview(facebookLoginButton)
+        //Google
+        scrollView.addSubview(googleLogInButton)
     }
 
     override func viewDidLayoutSubviews() {
@@ -125,6 +132,11 @@ class LoginViewController: UIViewController {
                                   width: scrollView.width - 60,
                                  height: 52)
         facebookLoginButton.frame.origin.y = loginButton.bottom + 20
+        
+        googleLogInButton.frame = CGRect(x: 30,
+                                  y: facebookLoginButton.bottom + 10,
+                                  width: scrollView.width - 60,
+                                 height: 52)
         
     }
     
