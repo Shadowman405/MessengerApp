@@ -23,6 +23,7 @@
 		BF0F6E8727AB0E0D00371294 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0F6E8627AB0E0D00371294 /* Extensions.swift */; };
 		BFD42CC927AC66D100D29552 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD42CC827AC66D100D29552 /* GoogleService-Info.plist */; };
 		BFD42CCB27AEE7AF00D29552 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD42CCA27AEE7AF00D29552 /* DatabaseManager.swift */; };
+		BFF6303C27B2FCF50068FD19 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF6303B27B2FCF50068FD19 /* ChatViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		BF0F6E8627AB0E0D00371294 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		BFD42CC827AC66D100D29552 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BFD42CCA27AEE7AF00D29552 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		BFF6303B27B2FCF50068FD19 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		CA7DD5875B055A7DB16C9F11 /* Pods_MessengerApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MessengerApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -109,6 +111,7 @@
 				BF0F6E7F27AB07A600371294 /* VideoPlayerViewController.swift */,
 				BF0F6E8127AB07C800371294 /* NewConversationViewController.swift */,
 				BF0F6E8327AB07DD00371294 /* ProfileViewController.swift */,
+				BFF6303B27B2FCF50068FD19 /* ChatViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 				BF0F6E6027AB05D500371294 /* AppDelegate.swift in Sources */,
 				BF0F6E8427AB07DD00371294 /* ProfileViewController.swift in Sources */,
 				BF0F6E6227AB05D500371294 /* SceneDelegate.swift in Sources */,
+				BFF6303C27B2FCF50068FD19 /* ChatViewController.swift in Sources */,
 				BF0F6E7E27AB079500371294 /* PhotoViewerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
