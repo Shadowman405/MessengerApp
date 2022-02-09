@@ -26,6 +26,7 @@ final class StorageManager {
                 return
             }
             
+            // child was image, not images/  that planned to be
             self.storage.child("image/\(filename)").downloadURL { url, error in
                 guard let url = url else {
                     print("Failed to get download URL")
