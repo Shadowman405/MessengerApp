@@ -21,6 +21,7 @@
 		BF0F6E8227AB07C800371294 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0F6E8127AB07C800371294 /* NewConversationViewController.swift */; };
 		BF0F6E8427AB07DD00371294 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0F6E8327AB07DD00371294 /* ProfileViewController.swift */; };
 		BF0F6E8727AB0E0D00371294 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0F6E8627AB0E0D00371294 /* Extensions.swift */; };
+		BF5BDEB227B43C79009F1FF4 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5BDEB127B43C79009F1FF4 /* StorageManager.swift */; };
 		BFD42CC927AC66D100D29552 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD42CC827AC66D100D29552 /* GoogleService-Info.plist */; };
 		BFD42CCB27AEE7AF00D29552 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD42CCA27AEE7AF00D29552 /* DatabaseManager.swift */; };
 		BFF6303C27B2FCF50068FD19 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF6303B27B2FCF50068FD19 /* ChatViewController.swift */; };
@@ -44,6 +45,7 @@
 		BF0F6E8127AB07C800371294 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		BF0F6E8327AB07DD00371294 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		BF0F6E8627AB0E0D00371294 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		BF5BDEB127B43C79009F1FF4 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		BFD42CC827AC66D100D29552 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BFD42CCA27AEE7AF00D29552 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		BFF6303B27B2FCF50068FD19 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				BF0F6E6127AB05D500371294 /* SceneDelegate.swift */,
 				BF0F6E8627AB0E0D00371294 /* Extensions.swift */,
 				BFD42CCA27AEE7AF00D29552 /* DatabaseManager.swift */,
+				BF5BDEB127B43C79009F1FF4 /* StorageManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 				BF0F6E6227AB05D500371294 /* SceneDelegate.swift in Sources */,
 				BFF6303C27B2FCF50068FD19 /* ChatViewController.swift in Sources */,
 				BF0F6E7E27AB079500371294 /* PhotoViewerViewController.swift in Sources */,
+				BF5BDEB227B43C79009F1FF4 /* StorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
