@@ -266,7 +266,7 @@ extension LoginViewController: LoginButtonDelegate {
                                         print("StorageManager error: \(error)")
                                     }
                                 }
-                            }
+                            }.resume()
                         }
                     }
                 }
