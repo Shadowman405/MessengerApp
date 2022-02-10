@@ -59,6 +59,12 @@ class NewConversationViewController: UIViewController {
         searchBar.becomeFirstResponder()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
+        noResultsLabel.frame = CGRect(x: view.width / 4, y: (view.height - 200) / 2, width: view.width / 2, height: 200)
+    }
+    
     @objc private func dismissSelf() {
         dismiss(animated: true, completion: nil)
     }
@@ -68,6 +74,8 @@ class NewConversationViewController: UIViewController {
 extension NewConversationViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let text = searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {return}
+        searchBar.resignFirstResponder()
+        
         results.removeAll()
         
         spinner.show(in: view)
@@ -81,6 +89,7 @@ extension NewConversationViewController: UISearchBarDelegate {
             DatabaseManager.shared.getAllUsers { [weak self] result in
                 switch result {
                 case .success(let usersCollection):
+                    self?.hasFetched = true
                     self?.users = usersCollection
                     self?.filterUsers(with: query)
                 case .failure(let error):
@@ -92,6 +101,8 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     func filterUsers(with term: String) {
         guard hasFetched else {return}
+        
+        self.spinner.dismiss()
         
         let results: [[String:String]] = self.users.filter {
             guard let name = $0["name"]?.lowercased() else {return false}
