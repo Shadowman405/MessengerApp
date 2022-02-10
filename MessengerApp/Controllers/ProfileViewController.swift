@@ -21,6 +21,31 @@ class ProfileViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableHeaderView = createTablewHeader()
+    }
+    
+    func createTablewHeader() -> UIView? {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {return nil}
+        let safeEmail = DatabaseManager.safeEmail(emailAdress: email)
+        let filename = safeEmail + "_progile_picture.png"
+        let path = "image/"+filename
+        
+        let headerView = UIView(frame: CGRect(x: 0,
+                                        y: 0,
+                                        width: self.view.width,
+                                        height: 300))
+        headerView.backgroundColor = .link
+        let imageView = UIImageView(frame: CGRect(x: (headerView.width - 150) / 2,
+                                                  y: 75,
+                                                  width: 150,
+                                                  height: 150))
+        headerView.addSubview(imageView)
+        headerView.contentMode = .scaleAspectFill
+        headerView.layer.borderColor = UIColor.white.cgColor
+        headerView.layer.borderWidth = 3
+        headerView.layer.masksToBounds = true
+        
+        return headerView
     }
 
 }

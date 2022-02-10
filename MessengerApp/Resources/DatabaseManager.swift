@@ -11,6 +11,12 @@ import FirebaseDatabase
 final class DatabaseManager {
     static let shared = DatabaseManager()
     private let database = Database.database().reference()
+    
+    static func safeEmail(emailAdress: String) -> String {
+        var safeEmail = emailAdress.replacingOccurrences(of: ".", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+        return safeEmail
+    }
 }
 
 //MARK: - Account Managment
