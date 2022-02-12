@@ -30,13 +30,15 @@ class ChatViewController: MessagesViewController {
         super.viewDidLoad()
         view.backgroundColor = .cyan
         
-        messages.append(Message(sender: selfSender, messageId: "1", sentDate: Date(), kind: .text("Hello bebra")))
-        messages.append(Message(sender: selfSender, messageId: "1", sentDate: Date(), kind: .text("Do you wanna suck some leather things for 300 bucks ??")))
-        
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        messageInputBar.inputTextView.becomeFirstResponder()
     }
 }
 
@@ -74,6 +76,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty else {return}
         
+        print("Sending: \(text)")
         //Send message
         if isNewConversation {
             //create new conversation in DB
