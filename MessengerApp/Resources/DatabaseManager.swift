@@ -125,7 +125,80 @@ extension DatabaseManager {
     
     //Creates a new conv with target user email and first message sent
     public func createNewCoversation(with otherUserEmail: String, firstMessage: Message, completion: @escaping (Bool) -> Void){
+        guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String else {return}
+        let safeEmail = DatabaseManager.safeEmail(emailAdress: currentEmail)
+        let reference = database.child("\(safeEmail)")
         
+        reference.observeSingleEvent(of: .value) { snapshot in
+            guard var userNode = snapshot.value as? [String:Any] else {
+                completion(false)
+                print("User not found")
+                return
+            }
+            
+            let messageDate = firstMessage.sentDate
+            let dateString = ChatViewController.dateFormatter.string(from: messageDate)
+            
+            var message = ""
+            
+            switch firstMessage.kind {
+            case .text(let messageText):
+                message = messageText
+            case .attributedText(_):
+                break
+            case .photo(_):
+                break
+            case .video(_):
+                break
+            case .location(_):
+                break
+            case .emoji(_):
+                break
+            case .audio(_):
+                break
+            case .contact(_):
+                break
+            case .linkPreview(_):
+                break
+            case .custom(_):
+                break
+            }
+            
+            let newConversaionData: [String:Any] = [
+                "id": "conversation_\(firstMessage.messageId)",
+                "other_user_email": otherUserEmail,
+                "latest_message": [
+                    "date": dateString,
+                    "message": message,
+                    "is_read": false
+                ]
+            ]
+            
+            if var conversations = userNode["conversations"] as? [[String:Any]] {
+                conversations.append(newConversaionData)
+                userNode["conversations"] = conversations
+                reference.setValue(userNode) { error, _ in
+                    guard error == nil else {
+                        completion(false)
+                        return
+                    }
+                    completion(true)
+                }
+
+            } else {
+                userNode["conversations"] = [
+                    newConversaionData
+                ]
+                
+                reference.setValue(userNode) { error, _ in
+                    guard error == nil else {
+                        completion(false)
+                        return
+                    }
+                    completion(true)
+                }
+            }
+        }
     }
     
     //Fetches and returns all conversations for the user with passed in email
