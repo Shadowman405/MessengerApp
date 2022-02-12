@@ -118,11 +118,39 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     
     private func createMessageId() -> String {
         let dateString = Self.dateFormatter.string(from: Date())
-        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") else {return ""}
-        let newIdentifier = ("\(otherUserEmail)_\(currentUserEmail)_\(dateString)")
+        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {return ""}
+        
+        let safeCurrentEmail = DatabaseManager.safeEmail(emailAdress: currentUserEmail)
+        let newIdentifier = ("\(otherUserEmail)_\(safeCurrentEmail)_\(dateString)")
         print("created message id: \(newIdentifier)")
         return newIdentifier
     }
 
 }
 
+extension MessageKind {
+    var messageKindString: String {
+        switch self {
+        case .text(_):
+            return "text"
+        case .attributedText(_):
+            return "attributed_text"
+        case .photo(_):
+            return "photo"
+        case .video(_):
+            return "video"
+        case .location(_):
+            return "location"
+        case .emoji(_):
+            return "emoji"
+        case .audio(_):
+            return "audio"
+        case .contact(_):
+            return "contact"
+        case .linkPreview(_):
+            return "link_preview"
+        case .custom(_):
+            return "custom"
+        }
+    }
+}

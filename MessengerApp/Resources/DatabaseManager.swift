@@ -164,8 +164,10 @@ extension DatabaseManager {
                 break
             }
             
+            let conversationId = "conversation_\(firstMessage.messageId)"
+            
             let newConversaionData: [String:Any] = [
-                "id": "conversation_\(firstMessage.messageId)",
+                "id": conversationId,
                 "other_user_email": otherUserEmail,
                 "latest_message": [
                     "date": dateString,
@@ -177,12 +179,14 @@ extension DatabaseManager {
             if var conversations = userNode["conversations"] as? [[String:Any]] {
                 conversations.append(newConversaionData)
                 userNode["conversations"] = conversations
-                reference.setValue(userNode) { error, _ in
+                reference.setValue(userNode) {[weak self] error, _ in
                     guard error == nil else {
                         completion(false)
                         return
                     }
-                    completion(true)
+                    self?.finishCreatingConversation(conversationID: conversationId,
+                                                    firstMessage: firstMessage,
+                                                    completion: completion)
                 }
 
             } else {
@@ -190,14 +194,75 @@ extension DatabaseManager {
                     newConversaionData
                 ]
                 
-                reference.setValue(userNode) { error, _ in
+                reference.setValue(userNode) {[weak self] error, _ in
                     guard error == nil else {
                         completion(false)
                         return
                     }
-                    completion(true)
+                    self?.finishCreatingConversation(conversationID: conversationId,
+                                                    firstMessage: firstMessage,
+                                                    completion: completion)
                 }
             }
+        }
+    }
+    
+    private func finishCreatingConversation(conversationID: String, firstMessage: Message, completion: @escaping ((Bool) -> Void)) {
+        
+        var message = ""
+        
+        let messageDate = firstMessage.sentDate
+        let dateString = ChatViewController.dateFormatter.string(from: messageDate)
+        
+        switch firstMessage.kind {
+        case .text(let messageText):
+            message = messageText
+        case .attributedText(_):
+            break
+        case .photo(_):
+            break
+        case .video(_):
+            break
+        case .location(_):
+            break
+        case .emoji(_):
+            break
+        case .audio(_):
+            break
+        case .contact(_):
+            break
+        case .linkPreview(_):
+            break
+        case .custom(_):
+            break
+        }
+        
+        guard let myEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+            completion(false)
+            return}
+        
+        let currentUserEmail = DatabaseManager.safeEmail(emailAdress: myEmail)
+        
+        let collectionMessage: [String:Any] = [
+            "id": firstMessage.messageId,
+            "type": firstMessage.kind.messageKindString,
+            "content": message,
+            "date": dateString,
+            "sender_email": currentUserEmail,
+            "is_read": false
+        ]
+        
+        let value: [String:Any] = [
+            "messages": [
+                collectionMessage
+            ]
+        ]
+        database.child("\(conversationID)").setValue(value) { error, _ in
+            guard error == nil else {
+                completion(false)
+                return
+            }
+            completion(true)
         }
     }
     
