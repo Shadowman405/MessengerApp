@@ -177,6 +177,17 @@ extension DatabaseManager {
                 ]
             ]
             
+            let recipient_newConversaionData: [String:Any] = [
+                "id": conversationId,
+                "other_user_email": safeEmail,
+                "name": name,
+                "latest_message": [
+                    "date": dateString,
+                    "message": message,
+                    "is_read": false
+                ]
+            ]
+            
             if var conversations = userNode["conversations"] as? [[String:Any]] {
                 conversations.append(newConversaionData)
                 userNode["conversations"] = conversations
@@ -296,8 +307,31 @@ extension DatabaseManager {
     
     
     // Get all messages for a given conversation
-    public func getAllMessagesForConversation(with id:String, copmletion: @escaping (Result<String,Error>) -> Void){
-        
+    public func getAllMessagesForConversation(with id:String, completion: @escaping (Result<[Message],Error>) -> Void){
+        database.child("\(id)/messages").observe(.value) { snapshot in
+            guard let value = snapshot.value as? [[String: Any]] else {
+                completion(.failure(DatabaseErrors.failedToFetch))
+                return
+            }
+            
+            let messages: [Message] = value.compactMap({ dictionary in
+                guard let name = dictionary["name"] as? String,
+                      let isRead = dictionary["is_read"] as? Bool,
+                      let messageId = dictionary["id"] as? String,
+                      let content = dictionary["content"] as? String,
+                      let senderEmail = dictionary["sender_email"] as? String,
+                      let type = dictionary["type"] as? String,
+                      let dateString = dictionary["date"] as? String,
+                      let date = ChatViewController.dateFormatter.date(from: dateString) else {
+                    return nil
+                }
+                
+                let sender = Sender(photoURL: "", senderId: senderEmail, displayName: name)
+                
+                return Message(sender: sender, messageId: messageId, sentDate: date, kind: .text(content))
+            })
+            completion(.success(messages))
+        }
     }
     
     //Sends a message with target conversation and message

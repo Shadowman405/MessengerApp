@@ -34,19 +34,26 @@ class ChatViewController: MessagesViewController {
     
     public var isNewConversation = false
     public let otherUserEmail: String
+    private let conversationId: String?
     
     private var messages = [Message]()
+    
     private var selfSender: Sender? {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {return nil}
+        let safeEmail = DatabaseManager.safeEmail(emailAdress: email)
         
         return Sender(photoURL: "",
-                      senderId: email,
+                      senderId: safeEmail,
                       displayName: "Uncle Bogdan")
     }
     
-    init (with email: String) {
+    init (with email: String, id: String?) {
+        self.conversationId = id
         self.otherUserEmail = email
         super.init(nibName: nil, bundle: nil)
+        if let conversationId = conversationId {
+            listenForMessages(id: conversationId)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -67,6 +74,24 @@ class ChatViewController: MessagesViewController {
         super.viewDidAppear(animated)
         messageInputBar.inputTextView.becomeFirstResponder()
     }
+    
+    private func listenForMessages (id: String){
+        DatabaseManager.shared.getAllMessagesForConversation(with: id) {[weak self] result in
+            switch result {
+            case .success(let messages):
+                guard !messages.isEmpty else {
+                    return
+                }
+                self?.messages = messages
+                DispatchQueue.main.async {
+                    self?.messagesCollectionView.reloadDataAndKeepOffset()
+                }
+                
+            case .failure(let error):
+                print("Failed to get messages : \(error)")
+            }
+        }
+    }
 }
 
 
@@ -78,7 +103,6 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             return sender
         }
         fatalError("Self Sender is nil, email not cashed")
-        return Sender(photoURL: "", senderId: "12", displayName: "Bodya")
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
