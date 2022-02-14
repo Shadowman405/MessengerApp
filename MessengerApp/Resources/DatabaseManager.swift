@@ -124,7 +124,7 @@ struct ChatAppUser {
 extension DatabaseManager {
     
     //Creates a new conv with target user email and first message sent
-    public func createNewCoversation(with otherUserEmail: String, firstMessage: Message, completion: @escaping (Bool) -> Void){
+    public func createNewCoversation(with otherUserEmail: String, name: String, firstMessage: Message, completion: @escaping (Bool) -> Void){
         guard let currentEmail = UserDefaults.standard.value(forKey: "email") as? String else {return}
         let safeEmail = DatabaseManager.safeEmail(emailAdress: currentEmail)
         let reference = database.child("\(safeEmail)")
@@ -169,6 +169,7 @@ extension DatabaseManager {
             let newConversaionData: [String:Any] = [
                 "id": conversationId,
                 "other_user_email": otherUserEmail,
+                "name": name,
                 "latest_message": [
                     "date": dateString,
                     "message": message,
@@ -184,7 +185,7 @@ extension DatabaseManager {
                         completion(false)
                         return
                     }
-                    self?.finishCreatingConversation(conversationID: conversationId,
+                    self?.finishCreatingConversation(name: name, conversationID: conversationId,
                                                     firstMessage: firstMessage,
                                                     completion: completion)
                 }
@@ -199,7 +200,7 @@ extension DatabaseManager {
                         completion(false)
                         return
                     }
-                    self?.finishCreatingConversation(conversationID: conversationId,
+                    self?.finishCreatingConversation(name:name, conversationID: conversationId,
                                                     firstMessage: firstMessage,
                                                     completion: completion)
                 }
@@ -207,7 +208,7 @@ extension DatabaseManager {
         }
     }
     
-    private func finishCreatingConversation(conversationID: String, firstMessage: Message, completion: @escaping ((Bool) -> Void)) {
+    private func finishCreatingConversation(name: String, conversationID: String, firstMessage: Message, completion: @escaping ((Bool) -> Void)) {
         
         var message = ""
         
@@ -249,7 +250,8 @@ extension DatabaseManager {
             "content": message,
             "date": dateString,
             "sender_email": currentUserEmail,
-            "is_read": false
+            "is_read": false,
+            "name": name
         ]
         
         let value: [String:Any] = [

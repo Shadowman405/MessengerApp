@@ -104,7 +104,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
                                   messageId: messageId,
                                   sentDate: Date(),
                                   kind: .text(text))
-            DatabaseManager.shared.createNewCoversation(with: otherUserEmail, firstMessage: message) {[weak self] success in
+            DatabaseManager.shared.createNewCoversation(with: otherUserEmail,name: self.title ?? "User" ,firstMessage: message) {[weak self] success in
                 if success {
                     print("message sent")
                 } else {
