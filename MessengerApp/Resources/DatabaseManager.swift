@@ -290,6 +290,7 @@ extension DatabaseManager {
                 let latestMesageObject = LatestMessage(date: date, text: message, isRead: isRead)
                 return Conversation(id: conversationId, name: name, otherUserEmail: otherUserEmail, latestMessage: latestMesageObject)
             })
+            completion(.success(conversations))
         }
     }
     

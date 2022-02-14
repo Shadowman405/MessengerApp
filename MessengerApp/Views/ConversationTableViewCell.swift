@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ConversationTableViewCell: UITableViewCell {
     
@@ -59,7 +60,20 @@ class ConversationTableViewCell: UITableViewCell {
                                         height: (contentView.height - 20) / 2)
     }
     
-    public func configure(with model: String) {
+    public func configure(with model: Conversation) {
+        self.userMessageLabel.text = model.latestMessage.text
+        self.userNameLabel.text = model.name
         
+        let path = "\(model.otherUserEmail)_profile_picture.png"
+        StorageManager.shared.downloadURL(for: path) { [weak self] result in
+            switch result {
+            case .success(let url):
+                DispatchQueue.main.async {
+                    self?.userImageView.sd_setImage(with: url, completed: nil)
+                }
+            case .failure(let error):
+                print("Failed to get image URL: \(error.localizedDescription)")
+            }
+        }
     }
 }
