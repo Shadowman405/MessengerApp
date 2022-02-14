@@ -52,7 +52,7 @@ class ChatViewController: MessagesViewController {
         self.otherUserEmail = email
         super.init(nibName: nil, bundle: nil)
         if let conversationId = conversationId {
-            listenForMessages(id: conversationId)
+            listenForMessages(id: conversationId, shouldScrollToBottom: true)
         }
     }
     
@@ -75,7 +75,7 @@ class ChatViewController: MessagesViewController {
         messageInputBar.inputTextView.becomeFirstResponder()
     }
     
-    private func listenForMessages (id: String){
+    private func listenForMessages (id: String, shouldScrollToBottom: Bool){
         DatabaseManager.shared.getAllMessagesForConversation(with: id) {[weak self] result in
             switch result {
             case .success(let messages):
@@ -85,6 +85,10 @@ class ChatViewController: MessagesViewController {
                 self?.messages = messages
                 DispatchQueue.main.async {
                     self?.messagesCollectionView.reloadDataAndKeepOffset()
+                    
+                    if shouldScrollToBottom {
+                        self?.messagesCollectionView.scrollToLastItem()
+                    }
                 }
                 
             case .failure(let error):

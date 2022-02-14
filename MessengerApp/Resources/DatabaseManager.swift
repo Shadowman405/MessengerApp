@@ -129,7 +129,7 @@ extension DatabaseManager {
         let safeEmail = DatabaseManager.safeEmail(emailAdress: currentEmail)
         let reference = database.child("\(safeEmail)")
         
-        reference.observeSingleEvent(of: .value) { snapshot in
+        reference.observeSingleEvent(of: .value) {[weak self] snapshot in
             guard var userNode = snapshot.value as? [String:Any] else {
                 completion(false)
                 print("User not found")
@@ -180,13 +180,22 @@ extension DatabaseManager {
             let recipient_newConversaionData: [String:Any] = [
                 "id": conversationId,
                 "other_user_email": safeEmail,
-                "name": name,
+                "name": "Self",
                 "latest_message": [
                     "date": dateString,
                     "message": message,
                     "is_read": false
                 ]
             ]
+            
+            self?.database.child("\(otherUserEmail)/conversations").observeSingleEvent(of: .value) {[weak self] snapshot in
+                if var conversations = snapshot.value as? [[String:Any]] {
+                    conversations.append(recipient_newConversaionData)
+                    self?.database.child("\(otherUserEmail)/conversations").setValue(conversationId)
+                } else {
+                    self?.database.child("\(otherUserEmail)/conversations").setValue([recipient_newConversaionData])
+                }
+            }
             
             if var conversations = userNode["conversations"] as? [[String:Any]] {
                 conversations.append(newConversaionData)
