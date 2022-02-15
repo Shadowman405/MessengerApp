@@ -431,9 +431,18 @@ extension DatabaseManager {
                     }
                     targetonversation?["latest_message"] = updatedValue
                     guard let finalConversation = targetonversation else {return}
+                    
                     currentUserConversations[position] = finalConversation
+                    strongSelf.database.child("\(currentEmail)/conversations").setValue(currentUserConversations) { error, _ in
+                        guard error == nil else {
+                            completion(false)
+                            return
+                        }
+                        
+                        completion(true)
+
+                    }
                 }
-                completion(true)
             }
         }
     }
