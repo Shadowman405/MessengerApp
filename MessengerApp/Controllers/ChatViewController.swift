@@ -125,22 +125,32 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty,
               let selfSender = self.selfSender else {return}
         
+        let message = Message(sender: selfSender,
+                              messageId: messageId,
+                              sentDate: Date(),
+                              kind: .text(text))
+        
         print("Sending: \(text)")
         //Send message
         if isNewConversation {
-            let message = Message(sender: selfSender,
-                                  messageId: messageId,
-                                  sentDate: Date(),
-                                  kind: .text(text))
+            
             DatabaseManager.shared.createNewCoversation(with: otherUserEmail,name: self.title ?? "User" ,firstMessage: message) {[weak self] success in
                 if success {
                     print("message sent")
+                    self?.isNewConversation = false
                 } else {
                     print("failed to send")
                 }
             }
         } else {
             //append to existing conversation
+            DatabaseManager.shared.sendMessage(to: otherUserEmail, message: message) { success in
+                if success {
+                    print("Message send")
+                } else {
+                    print("Failed to send")
+                }
+            }
         }
     }
     
