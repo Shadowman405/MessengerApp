@@ -189,6 +189,19 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let message = messages[indexPath.section]
+        
+        switch message.kind {
+        case .photo(let media):
+            guard let imageURL = media.url else { return}
+            let vc = PhotoViewerViewController(with: imageURL)
+            self.navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
+        }
+    }
+    
     //MARK: - InputBarAccessoryViewDelegate  extensions
     
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
