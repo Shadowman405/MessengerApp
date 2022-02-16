@@ -254,10 +254,20 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {return}
+        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
+              let imageData = image.pngData() else {return}
+        
+        let fileName = "photo_message_" + createMessageId()
         
         //upload image
-        
+        StorageManager.shared.uploadMessagePhoto(withData: imageData, filename: fileName) { result in
+            switch result {
+            case .success(let urlString):
+                break
+            case .failure(let error):
+                print("Failed upload photo image: \(error)")
+            }
+        }
         //send message
     }
 }
