@@ -267,8 +267,9 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
               let selfSender = selfSender,
               let name = self.title else {return}
         
-        let fileName = "photo_message_" + createMessageId()
+        
         let messageId = createMessageId()
+        let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".png"
         
         //upload image
         StorageManager.shared.uploadMessagePhoto(withData: imageData, filename: fileName) {[weak self] result in
