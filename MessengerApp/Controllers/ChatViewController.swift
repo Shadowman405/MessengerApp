@@ -344,8 +344,37 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
         else if let videoUrl = info[.mediaURL] as? URL {
             let messageId = createMessageId()
             let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".mov"
-            //Upload video
             
+            //Upload video
+            StorageManager.shared.uploadMessageVideo(withData: videoUrl, filename: fileName) {[weak self] result in
+                guard let strongSelf = self else {return}
+                switch result {
+                case .success(let urlString):
+                    print("Uploaded message Video : \(urlString)")
+                    guard let url = URL(string: urlString),
+                          let placeholder = UIImage(systemName: "plus") else {return}
+                    
+                    let media = Media(url: url,
+                                      image: nil,
+                                      placeholderImage: placeholder,
+                                      size: .zero)
+                    
+                    let message = Message(sender: selfSender,
+                                          messageId: messageId,
+                                          sentDate: Date(),
+                                          kind: .video(media))
+                    
+                    DatabaseManager.shared.sendMessage(to: conversationId, otherUserEmail: strongSelf.otherUserEmail, name: name, newMessage: message) { success in
+                        if success {
+                            print("Send photo image")
+                        } else {
+                            print("Failed to send photo message")
+                        }
+                    }
+                case .failure(let error):
+                    print("Failed upload photo image: \(error)")
+                }
+            }
         }
         
         
